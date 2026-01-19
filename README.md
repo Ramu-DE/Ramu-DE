@@ -2,7 +2,7 @@ Hi, I'm Ramaiah
 
 # Making Agentic AI Real
 
-I build **agentic AI systems** and share **production-ready examples** that developers can clone, run, and extend right away.
+I build **agentic AI systems** and share **code-examples** that developers can clone, run, and extend right away.
 
 My work is hands-on and code-first. I focus on real implementations, clear architecture, and tested setups for **AI Agents, Multi-Agent systems, RAG, GraphDB, tool calling, memory, and local & cloud LLM apps**.
 

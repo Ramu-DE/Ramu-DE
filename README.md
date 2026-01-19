@@ -131,9 +131,6 @@ To make agents production-ready, I evaluate them across multiple dimensions:
 
 ### What You’ll Find Here
 
-- **Production-grade agent blueprints**  
-  End-to-end agent implementations covering single agents, multi-agent teams, tool-calling, memory, planning, and recovery patterns.
-
 - **Minimal, opinionated starter foundations**  
   Clean, well-structured templates designed to get you from zero → running agent fast, without boilerplate or unnecessary abstractions.
 

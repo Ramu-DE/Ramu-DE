@@ -117,6 +117,91 @@ I use **Graph Databases** when relationships matter.
 
 ---
 
+## 🧬 Biomedical Knowledge Graph — Ontology to Agentic AI
+
+A production-grade POC bridging **W3C Semantic Web standards** with **modern graph + vector + agent AI** on a biomedical domain (drugs, diseases, genes, proteins, clinical trials, biomarkers, adverse events).
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+**W3C Semantic Web Stack**
+- OWL ontology (19 classes, 39 properties, 5 inference rules)
+- RDF/RDFS in Turtle format
+- SPARQL queries (29+ patterns, up to 4-hop traversals)
+- SHACL validation (24 constraint shapes)
+
+**Ontology Domain**
+Drugs, Diseases, Genes, Proteins, Biomarkers, Clinical Trials, Adverse Events, Researchers, Institutions, Research Papers
+
+</td>
+<td width="33%" valign="top">
+
+**Graph Databases — Benchmarked**
+- **Neo4j Aura** — Cypher + native HNSW vectors (unified)
+- **AWS Neptune Analytics** — openCypher + native vectors (unified, 6x faster)
+- **Neptune DB + OpenSearch** — two-layer architecture (high variance)
+
+**Vector Search (HNSW)**
+- 384-dim biomedical embeddings, cosine similarity
+- Tunable profiles: Sparse/Fast → Balanced → Dense/Recall
+- Native node-level vector indices (no external vector DB)
+
+</td>
+<td width="33%" valign="top">
+
+**Multi-Agent ReAct Framework**
+- 7 specialized agents (Genomics, Pharmacology, Clinical Evidence, Safety, Pathway Analysis, Molecular Biology, Orchestrator)
+- AWS Strands agent framework + tool decorators
+- 5–7 hop clinical reasoning chains
+- Pydantic structured outputs (risk scores, evidence chains)
+
+**AWS Stack**
+Neptune Analytics, Bedrock (Claude), EC2, IAM, OpenSearch
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+**GraphRAG (Hybrid Retrieval)**
+- Vector-first + graph traversal
+- Graph-first + vector ranking
+- Hybrid: vector + graph + keyword in a single query
+- Unified architecture eliminates cross-service friction
+
+</td>
+<td width="33%" valign="top">
+
+**Real Benchmark Results**
+
+| Architecture | Mean Latency |
+|---|---|
+| Neptune Analytics (unified) | **34.8 ms** |
+| Neptune DB + OpenSearch (two-layer) | 69.1 ms |
+| Neo4j Aura (unified, cross-region) | 208.1 ms |
+
+10 clinical queries × 10 iterations on real AWS infra
+
+</td>
+<td width="33%" valign="top">
+
+**Use Cases Enabled**
+- Clinical decision support (gene → disease → drug reasoning)
+- Drug repurposing via 4–7 hop pathway discovery
+- Adverse event prediction from similar drugs
+- Biomarker validation across trial data
+- Interactive graph visualizations (PyVis/Vis.js)
+
+</td>
+</tr>
+</table>
+
+---
+
 ## 🧪 Evaluation & Reliability
 
 Building reliable LLMs and agents is hard because **many failures are silent** — no stack trace, no exception, just confidently wrong behavior.

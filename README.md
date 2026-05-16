@@ -119,134 +119,37 @@ I use **Graph Databases** when relationships matter.
 
 ## 🧬 Biomedical Knowledge Graph — Ontology to Agentic AI
 
-The most fundamental unit of **"understanding"** is one semantic relationship: how A relates to B. RDF defines it as a triple — `Subject → Predicate → Object`. Chain enough triples and you have a graph that a machine can traverse, reason over, and use as grounded context. LLMs are powerful but context-blind outside their training data. Ontology management alongside data modelling, knowledge graph layers above your lakehouse, and metadata that carries lineage alongside meaning — this is the semantic backbone that makes AI systems actually understand your data.
-
-I built a production-grade biomedical KG to prove this end-to-end.
+The most fundamental unit of **"understanding"** is one semantic relationship: how A relates to B. `"Pembrolizumab" → "treats" → "Lung Cancer"` — one triple, one unit of meaning. Chain enough triples and you have a graph a machine can traverse, reason over, and use as grounded context. LLMs are powerful but context-blind outside their training data — **ontology is the semantic backbone** that makes AI systems actually understand your data.
 
 <table>
 <tr>
 <td width="33%" valign="top">
 
 **Why Ontology Matters for AI**
-- Data without semantics is invisible to machines — no amount of pipeline investment fixes that
-- An ontology defines **what things are** (classes), **how they relate** (properties), and **what rules govern them** (constraints)
+- Data without semantics is invisible to machines
+- An ontology defines **what things are** (classes), **how they relate** (properties), and **what rules govern them** (constraints + inference)
 - It turns raw data into knowledge a machine can reason over — not just retrieve
-- This is the missing layer between your data platform and your AI initiative
-
-</td>
-<td width="33%" valign="top">
-
-**The W3C Semantic Stack**
-- **RDF** — the triple: `"Pembrolizumab" → "treats" → "Lung Cancer"`. One relationship = one unit of understanding
-- **RDFS** — the vocabulary that explains how nodes relate: classes, domains, ranges
-- **OWL** — computational logic that lets machines not just store knowledge, but **actively reason and infer** from it
-- **SPARQL** — query language built for relationship traversal the relational model wasn't designed for
-- **SHACL** — enforces structural contracts on your graph, validating data shape before reasoning
-
-</td>
-<td width="33%" valign="top">
-
-**Ontology Building Blocks (What to Represent)**
-- **Concepts (Classes)** — Drug, Disease, Gene, Protein, Biomarker, Clinical Trial, Adverse Event, Researcher, Institution, Paper
-- **Hierarchy (Subclasses)** — Drug → Monoclonal Antibody, Small Molecule, Peptide · Disease → Oncology, Metabolic, Neurological
-- **Attributes** — ICD-10 codes, UniProt IDs, h-index, mechanism of action, chromosome location, approval status
-- **Acronyms & Synonyms** — standardized naming across the domain
-
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td width="33%" valign="top">
-
-**Semantic Relationships (How Things Connect)**
-- `treats / treatedBy` — Drug ↔ Disease (inverse pair)
-- `targets` — Drug → Protein (binding affinity)
-- `associatedWithGene` — Disease → Gene
-- `predictsResponseTo` — Biomarker → Drug
-- `investigatedBy / investigatesDrug` — Drug ↔ Trial
-- `reportsAdverseEvent` — Trial → Adverse Event
-- `authoredBy` — Paper → Researcher
-- `affiliatedWith` — Researcher → Institution
-- `similarTo` — Drug ↔ Drug (symmetric)
-- `partOf` — hierarchical containment (transitive)
-
-</td>
-<td width="33%" valign="top">
-
-**Inference Rules (Machine Reasoning with OWL)**
-
-Machines don't just store — they **infer new knowledge**:
-- **ApprovedTreatment** — Drug treats Disease + "Approved" status → inferred
-- **Immunotherapy** — Drug targeting Immune Checkpoint Protein → inferred
-- **HighImpactResearcher** — h-index ≥ 70 → inferred
-- **DefinitiveEvidence** — Phase 3 + Completed trial → inferred
-- **EpidemicDisease** — "Very High" prevalence → inferred
-
-These rules fire automatically — no manual wiring needed.
-
-</td>
-<td width="33%" valign="top">
-
-**Constraint Validation (SHACL)**
-
-Structural contracts on the graph:
-- 24 shapes enforcing data quality
-- Drug IDs must match `D###` pattern
-- Disease categories restricted to valid set
-- Phase 3 trials require enrollment ≥ 100
-- Validates **before** reasoning — garbage in ≠ knowledge out
-
-**Property Characteristics**
-- `owl:inverseOf` — treats ↔ treatedBy
-- `owl:SymmetricProperty` — drug similarTo drug
-- `owl:TransitiveProperty` — partOf chains
-
-</td>
-</tr>
-</table>
-
-<table>
-<tr>
-<td width="33%" valign="top">
-
-**Multi-Hop Traversal (Why Graphs Beat Tables)**
-
-Relationship traversal the relational model wasn't designed for:
-- Gene → Disease → Drug → Protein → Biomarker → Trial → Adverse Event (7-hop)
-- Paper → Researcher → Institution → Trial → Drug → Disease (provenance chain)
-- Drug → Disease → Gene → Protein → Biomarker → Drug (cycle detection)
-
-**Clinical Example:**
-*"BRCA1 mutation"* → Gene → Breast Cancer → Pembrolizumab → Trial → Adverse Events → Risk Score
-
-</td>
-<td width="33%" valign="top">
-
-**Ontology-Driven Agent Reasoning**
-
-Agents use ontology structure as the reasoning scaffold:
-- **Genomics Agent** — Gene → Disease → Protein paths
-- **Pharmacology Agent** — Drug → targets → mechanism chains
-- **Clinical Evidence Agent** — Trial → Drug → Disease evidence
-- **Safety Agent** — Trial → Adverse Event → severity
-- **Pathway Agent** — multi-hop discovery across full ontology
-- **Orchestrator** — coordinates agents, synthesizes findings
-
-</td>
-<td width="33%" valign="top">
-
-**The Architectural Shift**
-
-Data platforms that serve AI well are **semantically aware**:
-- Ontology management alongside data modelling
-- Knowledge graph layers above your lakehouse
-- Metadata that carries **lineage alongside meaning**
-- Graph + Vector + Keyword hybrid retrieval (GraphRAG)
-- Unified architecture eliminates cross-service friction
+- Ontology management alongside data modelling, KG layers above your lakehouse, metadata that carries **lineage alongside meaning**
 
 > Ontology is not overhead — it is the feed that goes into AI.
+
+</td>
+<td width="33%" valign="top">
+
+**Ontology Concepts I Implement**
+- **Classes & Hierarchy** — Drug → Monoclonal Antibody, Small Molecule, Peptide · Disease → Oncology, Metabolic, Neurological
+- **Semantic Relationships** — treats/treatedBy (inverse), targets (binding), associatedWithGene, predictsResponseTo, similarTo (symmetric), partOf (transitive)
+- **OWL Reasoning** — machines infer new knowledge: ApprovedTreatment, Immunotherapy, DefinitiveEvidence — rules fire automatically
+- **SHACL Validation** — structural contracts enforced before reasoning
+
+</td>
+<td width="33%" valign="top">
+
+**Multi-Hop Reasoning + Agents**
+- Gene → Disease → Drug → Protein → Biomarker → Trial → Adverse Event (7-hop traversal)
+- *"BRCA1 mutation"* → Gene → Breast Cancer → Pembrolizumab → Trial → Risk Score
+- 6 ontology-driven agents (Genomics, Pharmacology, Clinical Evidence, Safety, Pathway, Orchestrator) using the ontology as a reasoning scaffold
+- Graph + Vector + Keyword hybrid retrieval (GraphRAG)
 
 </td>
 </tr>

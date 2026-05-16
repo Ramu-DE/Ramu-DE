@@ -115,48 +115,6 @@ I use **Graph Databases** when relationships matter.
 </tr>
 </table>
 
----
-
-## 🧬 Biomedical Knowledge Graph — Ontology to Agentic AI
-
-The most fundamental unit of **"understanding"** is one semantic relationship: how A relates to B. `"Pembrolizumab" → "treats" → "Lung Cancer"` — one triple, one unit of meaning. Chain enough triples and you have a graph a machine can traverse, reason over, and use as grounded context. LLMs are powerful but context-blind outside their training data — **ontology is the semantic backbone** that makes AI systems actually understand your data.
-
-<table>
-<tr>
-<td width="33%" valign="top">
-
-**Why Ontology Matters for AI**
-- Data without semantics is invisible to machines
-- An ontology defines **what things are** (classes), **how they relate** (properties), and **what rules govern them** (constraints + inference)
-- It turns raw data into knowledge a machine can reason over — not just retrieve
-- Ontology management alongside data modelling, KG layers above your lakehouse, metadata that carries **lineage alongside meaning**
-
-> Ontology is not overhead — it is the feed that goes into AI.
-
-</td>
-<td width="33%" valign="top">
-
-**Ontology Concepts I Implement**
-- **Classes & Hierarchy** — Drug → Monoclonal Antibody, Small Molecule, Peptide · Disease → Oncology, Metabolic, Neurological
-- **Semantic Relationships** — treats/treatedBy (inverse), targets (binding), associatedWithGene, predictsResponseTo, similarTo (symmetric), partOf (transitive)
-- **OWL Reasoning** — machines infer new knowledge: ApprovedTreatment, Immunotherapy, DefinitiveEvidence — rules fire automatically
-- **SHACL Validation** — structural contracts enforced before reasoning
-
-</td>
-<td width="33%" valign="top">
-
-**Multi-Hop Reasoning + Agents**
-- Gene → Disease → Drug → Protein → Biomarker → Trial → Adverse Event (7-hop traversal)
-- *"BRCA1 mutation"* → Gene → Breast Cancer → Pembrolizumab → Trial → Risk Score
-- 6 ontology-driven agents (Genomics, Pharmacology, Clinical Evidence, Safety, Pathway, Orchestrator) using the ontology as a reasoning scaffold
-- Graph + Vector + Keyword hybrid retrieval (GraphRAG)
-
-</td>
-</tr>
-</table>
-
----
-
 ## 🧪 Evaluation & Reliability
 
 Building reliable LLMs and agents is hard because **many failures are silent** — no stack trace, no exception, just confidently wrong behavior.

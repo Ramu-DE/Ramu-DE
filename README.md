@@ -119,26 +119,53 @@ I use **Graph Databases** when relationships matter.
 
 ## 🧬 Biomedical Knowledge Graph — Ontology to Agentic AI
 
-A production-grade POC showing how **formal ontology concepts** power a biomedical knowledge graph — from class hierarchies and semantic relationships to inference rules and constraint validation — bridged with multi-agent AI for clinical reasoning.
+The most fundamental unit of **"understanding"** is one semantic relationship: how A relates to B. RDF defines it as a triple — `Subject → Predicate → Object`. Chain enough triples and you have a graph that a machine can traverse, reason over, and use as grounded context. LLMs are powerful but context-blind outside their training data. Ontology management alongside data modelling, knowledge graph layers above your lakehouse, and metadata that carries lineage alongside meaning — this is the semantic backbone that makes AI systems actually understand your data.
+
+I built a production-grade biomedical KG to prove this end-to-end.
 
 <table>
 <tr>
 <td width="33%" valign="top">
 
-**Ontology Building Blocks**
-- **Concepts (Classes)** — Drug, Disease, Gene, Protein, Biomarker, Clinical Trial, Adverse Event, Researcher, Institution, Research Paper
-- **Hierarchy (Subclasses)** — Drug → Monoclonal Antibody, Small Molecule, Peptide · Disease → Oncology, Metabolic, Neurological · Biomarker → Protein, Genetic, Metabolic
-- **Attributes (Data Properties)** — ICD-10 codes, UniProt IDs, h-index, approval status, mechanism of action, chromosome location
+**Why Ontology Matters for AI**
+- Data without semantics is invisible to machines — no amount of pipeline investment fixes that
+- An ontology defines **what things are** (classes), **how they relate** (properties), and **what rules govern them** (constraints)
+- It turns raw data into knowledge a machine can reason over — not just retrieve
+- This is the missing layer between your data platform and your AI initiative
 
 </td>
 <td width="33%" valign="top">
 
-**Semantic Relationships (Object Properties)**
+**The W3C Semantic Stack**
+- **RDF** — the triple: `"Pembrolizumab" → "treats" → "Lung Cancer"`. One relationship = one unit of understanding
+- **RDFS** — the vocabulary that explains how nodes relate: classes, domains, ranges
+- **OWL** — computational logic that lets machines not just store knowledge, but **actively reason and infer** from it
+- **SPARQL** — query language built for relationship traversal the relational model wasn't designed for
+- **SHACL** — enforces structural contracts on your graph, validating data shape before reasoning
+
+</td>
+<td width="33%" valign="top">
+
+**Ontology Building Blocks (What to Represent)**
+- **Concepts (Classes)** — Drug, Disease, Gene, Protein, Biomarker, Clinical Trial, Adverse Event, Researcher, Institution, Paper
+- **Hierarchy (Subclasses)** — Drug → Monoclonal Antibody, Small Molecule, Peptide · Disease → Oncology, Metabolic, Neurological
+- **Attributes** — ICD-10 codes, UniProt IDs, h-index, mechanism of action, chromosome location, approval status
+- **Acronyms & Synonyms** — standardized naming across the domain
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+**Semantic Relationships (How Things Connect)**
 - `treats / treatedBy` — Drug ↔ Disease (inverse pair)
 - `targets` — Drug → Protein (binding affinity)
 - `associatedWithGene` — Disease → Gene
 - `predictsResponseTo` — Biomarker → Drug
-- `investigatedBy / investigatesDrug` — Drug ↔ Clinical Trial
+- `investigatedBy / investigatesDrug` — Drug ↔ Trial
 - `reportsAdverseEvent` — Trial → Adverse Event
 - `authoredBy` — Paper → Researcher
 - `affiliatedWith` — Researcher → Institution
@@ -148,27 +175,28 @@ A production-grade POC showing how **formal ontology concepts** power a biomedic
 </td>
 <td width="33%" valign="top">
 
-**Inference & Reasoning Rules (OWL)**
-- **ApprovedTreatment** — Drug that treats a Disease + has "Approved" status → inferred class
-- **Immunotherapy** — Drug targeting an Immune Checkpoint Protein → inferred class
-- **HighImpactResearcher** — Researcher with h-index ≥ 70 → inferred class
-- **DefinitiveEvidence** — Phase 3 + Completed trial → inferred class
-- **EpidemicDisease** — Disease with "Very High" prevalence → inferred class
+**Inference Rules (Machine Reasoning with OWL)**
+
+Machines don't just store — they **infer new knowledge**:
+- **ApprovedTreatment** — Drug treats Disease + "Approved" status → inferred
+- **Immunotherapy** — Drug targeting Immune Checkpoint Protein → inferred
+- **HighImpactResearcher** — h-index ≥ 70 → inferred
+- **DefinitiveEvidence** — Phase 3 + Completed trial → inferred
+- **EpidemicDisease** — "Very High" prevalence → inferred
+
+These rules fire automatically — no manual wiring needed.
 
 </td>
-</tr>
-</table>
-
-<table>
-<tr>
 <td width="33%" valign="top">
 
 **Constraint Validation (SHACL)**
+
+Structural contracts on the graph:
 - 24 shapes enforcing data quality
 - Drug IDs must match `D###` pattern
 - Disease categories restricted to valid set
 - Phase 3 trials require enrollment ≥ 100
-- Ensures ontology integrity before reasoning
+- Validates **before** reasoning — garbage in ≠ knowledge out
 
 **Property Characteristics**
 - `owl:inverseOf` — treats ↔ treatedBy
@@ -176,29 +204,6 @@ A production-grade POC showing how **formal ontology concepts** power a biomedic
 - `owl:TransitiveProperty` — partOf chains
 
 </td>
-<td width="33%" valign="top">
-
-**Multi-Hop Traversal Chains**
-- Gene → Disease → Drug → Protein → Biomarker → Trial → Adverse Event (7-hop)
-- Researcher → Institution → Trial → Drug → Disease → Gene → Protein
-- Drug → Disease → Gene → Protein → Biomarker → Drug (cycle detection)
-- Paper → Researcher → Institution → Trial → Drug → Disease → Adverse Event
-
-**Clinical Reasoning Example**
-*"Patient has BRCA1 mutation"* → Gene → Disease (Breast Cancer) → Drug (Pembrolizumab) → Trial → Adverse Events → Risk Score
-
-</td>
-<td width="33%" valign="top">
-
-**Ontology-Driven Agent Roles**
-- **Genomics Agent** — traverses Gene → Disease → Protein paths
-- **Pharmacology Agent** — reasons over Drug → targets → mechanism chains
-- **Clinical Evidence Agent** — queries Trial → Drug → Disease evidence
-- **Safety Agent** — walks Trial → Adverse Event → severity
-- **Pathway Agent** — discovers multi-hop routes across the full ontology
-- **Orchestrator** — coordinates agents using ontology structure as the reasoning scaffold
-
-</td>
 </tr>
 </table>
 
@@ -206,38 +211,42 @@ A production-grade POC showing how **formal ontology concepts** power a biomedic
 <tr>
 <td width="33%" valign="top">
 
-**W3C Stack Layered Implementation**
+**Multi-Hop Traversal (Why Graphs Beat Tables)**
 
-| Layer | Role |
-|---|---|
-| **RDF** | Triples (subject → predicate → object) |
-| **RDFS** | Schema (classes, domains, ranges) |
-| **OWL** | Reasoning (inference rules, class axioms) |
-| **SPARQL** | Querying (29+ patterns, multi-hop) |
-| **SHACL** | Validation (24 constraint shapes) |
+Relationship traversal the relational model wasn't designed for:
+- Gene → Disease → Drug → Protein → Biomarker → Trial → Adverse Event (7-hop)
+- Paper → Researcher → Institution → Trial → Drug → Disease (provenance chain)
+- Drug → Disease → Gene → Protein → Biomarker → Drug (cycle detection)
 
-</td>
-<td width="33%" valign="top">
-
-**Graph DB Benchmark (Real AWS Infra)**
-
-| Architecture | Mean Latency |
-|---|---|
-| Neptune Analytics (unified) | **34.8 ms** |
-| Neptune DB + OpenSearch (two-layer) | 69.1 ms |
-| Neo4j Aura (unified, cross-region) | 208.1 ms |
-
-10 clinical queries × 10 iterations · 384-dim vectors · HNSW index
+**Clinical Example:**
+*"BRCA1 mutation"* → Gene → Breast Cancer → Pembrolizumab → Trial → Adverse Events → Risk Score
 
 </td>
 <td width="33%" valign="top">
 
-**Use Cases Enabled**
-- Clinical decision support via ontology-guided reasoning
-- Drug repurposing through 4–7 hop pathway discovery
-- Adverse event prediction from drug similarity
-- Biomarker validation across trial evidence chains
-- Interactive graph visualizations of ontology structure
+**Ontology-Driven Agent Reasoning**
+
+Agents use ontology structure as the reasoning scaffold:
+- **Genomics Agent** — Gene → Disease → Protein paths
+- **Pharmacology Agent** — Drug → targets → mechanism chains
+- **Clinical Evidence Agent** — Trial → Drug → Disease evidence
+- **Safety Agent** — Trial → Adverse Event → severity
+- **Pathway Agent** — multi-hop discovery across full ontology
+- **Orchestrator** — coordinates agents, synthesizes findings
+
+</td>
+<td width="33%" valign="top">
+
+**The Architectural Shift**
+
+Data platforms that serve AI well are **semantically aware**:
+- Ontology management alongside data modelling
+- Knowledge graph layers above your lakehouse
+- Metadata that carries **lineage alongside meaning**
+- Graph + Vector + Keyword hybrid retrieval (GraphRAG)
+- Unified architecture eliminates cross-service friction
+
+> Ontology is not overhead — it is the feed that goes into AI.
 
 </td>
 </tr>

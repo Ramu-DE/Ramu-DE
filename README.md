@@ -119,45 +119,41 @@ I use **Graph Databases** when relationships matter.
 
 ## 🧬 Biomedical Knowledge Graph — Ontology to Agentic AI
 
-A production-grade POC bridging **W3C Semantic Web standards** with **modern graph + vector + agent AI** on a biomedical domain (drugs, diseases, genes, proteins, clinical trials, biomarkers, adverse events).
+A production-grade POC showing how **formal ontology concepts** power a biomedical knowledge graph — from class hierarchies and semantic relationships to inference rules and constraint validation — bridged with multi-agent AI for clinical reasoning.
 
 <table>
 <tr>
 <td width="33%" valign="top">
 
-**W3C Semantic Web Stack**
-- OWL ontology (19 classes, 39 properties, 5 inference rules)
-- RDF/RDFS in Turtle format
-- SPARQL queries (29+ patterns, up to 4-hop traversals)
-- SHACL validation (24 constraint shapes)
-
-**Ontology Domain**
-Drugs, Diseases, Genes, Proteins, Biomarkers, Clinical Trials, Adverse Events, Researchers, Institutions, Research Papers
+**Ontology Building Blocks**
+- **Concepts (Classes)** — Drug, Disease, Gene, Protein, Biomarker, Clinical Trial, Adverse Event, Researcher, Institution, Research Paper
+- **Hierarchy (Subclasses)** — Drug → Monoclonal Antibody, Small Molecule, Peptide · Disease → Oncology, Metabolic, Neurological · Biomarker → Protein, Genetic, Metabolic
+- **Attributes (Data Properties)** — ICD-10 codes, UniProt IDs, h-index, approval status, mechanism of action, chromosome location
 
 </td>
 <td width="33%" valign="top">
 
-**Graph Databases — Benchmarked**
-- **Neo4j Aura** — Cypher + native HNSW vectors (unified)
-- **AWS Neptune Analytics** — openCypher + native vectors (unified, 6x faster)
-- **Neptune DB + OpenSearch** — two-layer architecture (high variance)
-
-**Vector Search (HNSW)**
-- 384-dim biomedical embeddings, cosine similarity
-- Tunable profiles: Sparse/Fast → Balanced → Dense/Recall
-- Native node-level vector indices (no external vector DB)
+**Semantic Relationships (Object Properties)**
+- `treats / treatedBy` — Drug ↔ Disease (inverse pair)
+- `targets` — Drug → Protein (binding affinity)
+- `associatedWithGene` — Disease → Gene
+- `predictsResponseTo` — Biomarker → Drug
+- `investigatedBy / investigatesDrug` — Drug ↔ Clinical Trial
+- `reportsAdverseEvent` — Trial → Adverse Event
+- `authoredBy` — Paper → Researcher
+- `affiliatedWith` — Researcher → Institution
+- `similarTo` — Drug ↔ Drug (symmetric)
+- `partOf` — hierarchical containment (transitive)
 
 </td>
 <td width="33%" valign="top">
 
-**Multi-Agent ReAct Framework**
-- 7 specialized agents (Genomics, Pharmacology, Clinical Evidence, Safety, Pathway Analysis, Molecular Biology, Orchestrator)
-- AWS Strands agent framework + tool decorators
-- 5–7 hop clinical reasoning chains
-- Pydantic structured outputs (risk scores, evidence chains)
-
-**AWS Stack**
-Neptune Analytics, Bedrock (Claude), EC2, IAM, OpenSearch
+**Inference & Reasoning Rules (OWL)**
+- **ApprovedTreatment** — Drug that treats a Disease + has "Approved" status → inferred class
+- **Immunotherapy** — Drug targeting an Immune Checkpoint Protein → inferred class
+- **HighImpactResearcher** — Researcher with h-index ≥ 70 → inferred class
+- **DefinitiveEvidence** — Phase 3 + Completed trial → inferred class
+- **EpidemicDisease** — Disease with "Very High" prevalence → inferred class
 
 </td>
 </tr>
@@ -167,16 +163,63 @@ Neptune Analytics, Bedrock (Claude), EC2, IAM, OpenSearch
 <tr>
 <td width="33%" valign="top">
 
-**GraphRAG (Hybrid Retrieval)**
-- Vector-first + graph traversal
-- Graph-first + vector ranking
-- Hybrid: vector + graph + keyword in a single query
-- Unified architecture eliminates cross-service friction
+**Constraint Validation (SHACL)**
+- 24 shapes enforcing data quality
+- Drug IDs must match `D###` pattern
+- Disease categories restricted to valid set
+- Phase 3 trials require enrollment ≥ 100
+- Ensures ontology integrity before reasoning
+
+**Property Characteristics**
+- `owl:inverseOf` — treats ↔ treatedBy
+- `owl:SymmetricProperty` — drug similarTo drug
+- `owl:TransitiveProperty` — partOf chains
 
 </td>
 <td width="33%" valign="top">
 
-**Real Benchmark Results**
+**Multi-Hop Traversal Chains**
+- Gene → Disease → Drug → Protein → Biomarker → Trial → Adverse Event (7-hop)
+- Researcher → Institution → Trial → Drug → Disease → Gene → Protein
+- Drug → Disease → Gene → Protein → Biomarker → Drug (cycle detection)
+- Paper → Researcher → Institution → Trial → Drug → Disease → Adverse Event
+
+**Clinical Reasoning Example**
+*"Patient has BRCA1 mutation"* → Gene → Disease (Breast Cancer) → Drug (Pembrolizumab) → Trial → Adverse Events → Risk Score
+
+</td>
+<td width="33%" valign="top">
+
+**Ontology-Driven Agent Roles**
+- **Genomics Agent** — traverses Gene → Disease → Protein paths
+- **Pharmacology Agent** — reasons over Drug → targets → mechanism chains
+- **Clinical Evidence Agent** — queries Trial → Drug → Disease evidence
+- **Safety Agent** — walks Trial → Adverse Event → severity
+- **Pathway Agent** — discovers multi-hop routes across the full ontology
+- **Orchestrator** — coordinates agents using ontology structure as the reasoning scaffold
+
+</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<td width="33%" valign="top">
+
+**W3C Stack Layered Implementation**
+
+| Layer | Role |
+|---|---|
+| **RDF** | Triples (subject → predicate → object) |
+| **RDFS** | Schema (classes, domains, ranges) |
+| **OWL** | Reasoning (inference rules, class axioms) |
+| **SPARQL** | Querying (29+ patterns, multi-hop) |
+| **SHACL** | Validation (24 constraint shapes) |
+
+</td>
+<td width="33%" valign="top">
+
+**Graph DB Benchmark (Real AWS Infra)**
 
 | Architecture | Mean Latency |
 |---|---|
@@ -184,17 +227,17 @@ Neptune Analytics, Bedrock (Claude), EC2, IAM, OpenSearch
 | Neptune DB + OpenSearch (two-layer) | 69.1 ms |
 | Neo4j Aura (unified, cross-region) | 208.1 ms |
 
-10 clinical queries × 10 iterations on real AWS infra
+10 clinical queries × 10 iterations · 384-dim vectors · HNSW index
 
 </td>
 <td width="33%" valign="top">
 
 **Use Cases Enabled**
-- Clinical decision support (gene → disease → drug reasoning)
-- Drug repurposing via 4–7 hop pathway discovery
-- Adverse event prediction from similar drugs
-- Biomarker validation across trial data
-- Interactive graph visualizations (PyVis/Vis.js)
+- Clinical decision support via ontology-guided reasoning
+- Drug repurposing through 4–7 hop pathway discovery
+- Adverse event prediction from drug similarity
+- Biomarker validation across trial evidence chains
+- Interactive graph visualizations of ontology structure
 
 </td>
 </tr>

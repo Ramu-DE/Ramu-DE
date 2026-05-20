@@ -97,7 +97,6 @@ I use **Graph Databases** when relationships matter.
 
 ### 🧠 LLMs & Fine-Tuning
 
-- Work with both local and cloud LLMs
 - Fine-tune Gemma, Llama, and other OSS models
 - Know when fine-tuning is needed — and when not
 - Combine fine-tuning with RAG and tools
